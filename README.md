@@ -19,7 +19,7 @@ Run everything below from the `g2s/` folder (adjust `DEPLOY_ROOT` /
 ### 1. Get the code
 
 ```bash
-git clone <this-repo-url> g2s   # or git pull if already cloned
+git clone https://github.com/genome-nexus/g2s-v2.git g2s   # or git pull if already cloned
 cd g2s
 ```
 
