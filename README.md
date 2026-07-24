@@ -29,47 +29,44 @@ cd g2s
 docker compose up -d mysql mongo
 ```
 
+`mysql` now runs `yichuan0712/g2s-pdb2026-db` — a `mariadb:10.0` image with
+the `pdb_2026` dump baked in as a `/docker-entrypoint-initdb.d/` script, so
+the first start imports it automatically (takes a few minutes; watch with
+`docker logs -f pdb-mariadb`). Nothing to import by hand.
+
 (`mysql-old` in `docker-compose.yml` is a legacy archive DB that nothing in
 the app connects to — no need to start it.)
 
-### 3. Import the `pdb_2026` dump
-
-Linux:
-```bash
-gunzip -c pdb_2026.sql.gz | docker exec -i pdb-mariadb mysql -u cbio -pcbio pdb_2026
-```
-
-Windows (PowerShell — no native `gunzip`, so unzip inside the container instead):
-```powershell
-docker cp pdb_2026.sql.gz pdb-mariadb:/tmp/pdb_2026.sql.gz
-docker exec pdb-mariadb bash -c "gunzip -c /tmp/pdb_2026.sql.gz | mysql -u cbio -pcbio pdb_2026 && rm -f /tmp/pdb_2026.sql.gz"
-```
-
-Verify:
+Verify the import finished:
 ```bash
 docker exec pdb-mariadb mysql -u cbio -pcbio pdb_2026 -e "SELECT COUNT(*) FROM pdb_seq_alignment;"
 ```
 Expect a large row count (millions).
 
-### 4. Place the BLAST index
+### 3. Get the BLAST index
 
 ```bash
+docker pull yichuan0712/g2s-blast-index:latest
+docker create --name g2s-blast-index-tmp yichuan0712/g2s-blast-index:latest
+docker cp g2s-blast-index-tmp:/blast-index.tar.gz .
+docker rm g2s-blast-index-tmp
 mkdir -p workdir
 tar -xzf blast-index.tar.gz -C workdir
+rm blast-index.tar.gz
 ```
-(Same command on Windows — `tar` ships with Windows 10/11.)
+(Same commands on Linux and Windows — `tar` ships with Windows 10/11.)
 
 This creates `g2s/workdir/` with the BLAST index files in it
 (`pdb_seqres.db.*` + `pdb_seqres.fasta`) — that's the index the "search by
 protein sequence" feature runs `blastp` against.
 
-### 5. Pull the BLAST image
+### 4. Pull the BLAST image
 
 ```bash
 docker pull ncbi/blast:2.16.0
 ```
 
-### 6. Configure `application-local.properties`
+### 5. Configure `application-local.properties`
 
 This file is gitignored, so it won't exist after `git clone` — create it yourself:
 
@@ -102,7 +99,7 @@ Adjust the paths to match where you cloned the repo, and create the
 > need to touch them for a standard setup like this. Only edit them if you
 > later change the DB host, port, name, or credentials.
 
-### 7. HTTPS keystore (for port 5443)
+### 6. HTTPS keystore (for port 5443)
 
 Not in git — generate a self-signed cert.
 
@@ -125,14 +122,14 @@ Windows (PowerShell):
 Consider a real cert + reverse proxy instead of self-signed for anything
 reachable outside the machine.
 
-### 8. Build
+### 7. Build
 
 ```bash
 mvn clean package -DskipTests
 ```
 (On Windows, run `. .\yichuan_scripts\env.ps1` first to put JDK 8 and Maven on `PATH`.)
 
-### 9. Start the services
+### 8. Start the services
 
 Linux:
 ```bash
@@ -151,4 +148,18 @@ Quick check:
 http://<host>:8081/swagger-ui.html
 http://<host>:8082/swagger-ui.html
 https://<host>:5443/
+```
+
+## Rebuilding the data images
+
+`yichuan0712/g2s-pdb2026-db` and `yichuan0712/g2s-blast-index` are built from
+the Dockerfiles in [`docker/`](docker/). To publish a new version after the
+underlying `pdb_2026.sql.gz` / `blast-index.tar.gz` changes, put the updated
+file next to the matching Dockerfile and:
+
+```bash
+docker build -t yichuan0712/g2s-pdb2026-db:latest -f docker/Dockerfile.pdb2026-db .
+docker build -t yichuan0712/g2s-blast-index:latest -f docker/Dockerfile.blast-index .
+docker push yichuan0712/g2s-pdb2026-db:latest
+docker push yichuan0712/g2s-blast-index:latest
 ```

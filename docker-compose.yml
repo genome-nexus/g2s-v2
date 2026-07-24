@@ -1,6 +1,6 @@
 services:
   mysql:
-    image: mariadb:10.0
+    image: yichuan0712/g2s-pdb2026-db:latest
     container_name: pdb-mariadb
     environment:
       MYSQL_ROOT_PASSWORD: root

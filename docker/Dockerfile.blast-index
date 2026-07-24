@@ -1,0 +1,3 @@
+FROM alpine:3.20
+COPY blast-index.tar.gz /blast-index.tar.gz
+CMD ["true"]

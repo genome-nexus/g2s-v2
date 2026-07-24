@@ -1,0 +1,2 @@
+FROM mariadb:10.0
+COPY pdb_2026.sql.gz /docker-entrypoint-initdb.d/
