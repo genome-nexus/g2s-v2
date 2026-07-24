@@ -1,0 +1,89 @@
+# --- Maven / Java build ---
+target/
+*.class
+hs_err_pid*
+replay_pid*
+
+# Packaged artifacts (usually under target/, also catch copies at repo root)
+/*.jar
+/*.war
+/*.war.original
+/*.ear
+
+# Maven release / backup
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# --- IDE ---
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+!.vscode/extensions.json
+.classpath
+.project
+.settings/
+.factorypath
+.springBeans
+.sts4-cache/
+bin/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+__pycache__/
+*.pyc
+
+# --- Docker / local databases (large, machine-specific) ---
+mysql_data/
+mysql_data_old/
+mongo_data/
+data/
+
+# --- Pipeline / G2S working data ---
+workdir/
+tmp/
+g2s_pdb/
+pdbRepo/
+latest-alignment-inputs/
+diamond-inputs/
+
+# --- Database dumps & imports ---
+mysqldump_*.sql
+mysqldump_*.sql.gz
+import-db.log
+
+# --- Deployment transfer package (large, machine-specific, never commit) ---
+deploy-package/
+
+# --- Runtime logs ---
+logs/
+logs-*.out
+logs-*.err
+*.log
+
+# --- Local tooling (Maven/JDK installed under repo for Path A) ---
+tools/
+
+# --- Local config overrides (machine-specific paths; copy from *.example) ---
+**/application-local.properties
+docker-compose.override.yml
+yichuan_scripts/env.local.ps1
+
+# --- Path A docs are tracked; only personal notes here ---
+SETUP-PATH.local.md
+
+# --- Env / secrets ---
+.env
+.env.*
+*.pem
+*.key
+**/keystore.p12

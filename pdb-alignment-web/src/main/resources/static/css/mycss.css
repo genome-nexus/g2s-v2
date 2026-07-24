@@ -1,0 +1,17 @@
+textarea {
+    width: auto;
+}
+td.alignment{
+    word-wrap : break-word;
+    white-space:normal;
+    overflow:hidden;
+}
+p {
+    font-size: 100%;
+}
+.container-fluid {
+    padding-right:10%;
+    padding-left:10%;
+    margin-right:auto;
+    margin-left:auto
+ }

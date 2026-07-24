@@ -1,0 +1,6 @@
+# Copy to application-local.properties (gitignored), then run with:
+#   --spring.profiles.active=local   (after -jar; avoid -D on PowerShell)
+# start-services.ps1 already enables profile local.
+
+# Use rebuilt pipeline database (default prod name is pdb):
+spring.datasource.url=jdbc:mysql://localhost:3306/pdb_2026

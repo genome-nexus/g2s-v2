@@ -1,0 +1,8 @@
+# For pipeline: copy keys into src/main/resources/application-local.properties (gitignored),
+# then merge manually or replace paths in application.properties on your machine only.
+# Paths below are Windows Path A example:
+
+workspace=C:/CursorProjects/cbioportal260530/g2s/workdir/
+resource_dir=C:/CursorProjects/cbioportal260530/g2s/pdb-alignment-pipeline/src/main/resources/
+tmpdir=C:/CursorProjects/cbioportal260530/g2s/tmp/
+pdbRepo=C:/CursorProjects/cbioportal260530/g2s/g2s_pdb
