@@ -1,6 +1,6 @@
 # G2S Pipeline — NCBI BLAST+
 
-Self-contained rebuild path under `yichuan_scripts/pipeline-blast/` (target DB: **`pdb_2026`** on **`pdb-mariadb`** :3306).
+Self-contained rebuild path under `db-tools/pipeline-blast/` (target DB: **`pdb_2026`** on **`pdb-mariadb`** :3306).
 
 Does **not** modify `pdb-alignment-pipeline` (legacy dump path unchanged on **`pdb-mariadb-old`**).
 
@@ -36,11 +36,11 @@ Headers: `>101m_A_1 mol:protein length:154 0 154`
 
 ```powershell
 cd g2s
-. .\yichuan_scripts\env.ps1
-.\yichuan_scripts\pipeline-blast\run.ps1 Setup
-.\yichuan_scripts\pipeline-blast\run.ps1 Chunk -ChunkIndex 0
-.\yichuan_scripts\pipeline-blast\run.ps1 All
-.\yichuan_scripts\pipeline-blast\run.ps1 Status
+. .\db-tools\env.ps1
+.\db-tools\pipeline-blast\run.ps1 Setup
+.\db-tools\pipeline-blast\run.ps1 Chunk -ChunkIndex 0
+.\db-tools\pipeline-blast\run.ps1 All
+.\db-tools\pipeline-blast\run.ps1 Status
 ```
 
 Small test: `$MaxPdbFiles = 10`, `$MaxPdbSeqresLines = 100`, `$MaxGeneChunks = 1` in `config.ps1`.
@@ -53,7 +53,7 @@ gene chunks - the reference proteome doesn't change on PDB's weekly cadence,
 only PDB structures do).
 
 ```powershell
-.\yichuan_scripts\pipeline-blast\run.ps1 Update
+.\db-tools\pipeline-blast\run.ps1 Update
 ```
 
 What it does, each run:
@@ -81,7 +81,7 @@ Schedule it (Windows Task Scheduler, Wednesday mornings by default - a few
 hours after PDB's weekly release):
 
 ```powershell
-.\yichuan_scripts\pipeline-blast\register-weekly-update.ps1
+.\db-tools\pipeline-blast\register-weekly-update.ps1
 ```
 
 On the Linux deployment, use cron instead - see the note printed by that

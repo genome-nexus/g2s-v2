@@ -79,7 +79,7 @@ spring.datasource.url=jdbc:mysql://localhost:3306/pdb_2026?useSSL=false
 workspace=/opt/g2s/workdir/
 uploaddir=/opt/g2s/tmp/upload
 
-blastp=/opt/g2s/yichuan_scripts/blastp-docker.sh
+blastp=/opt/g2s/db-tools/blastp-docker.sh
 ```
 
 Windows:
@@ -89,7 +89,7 @@ spring.datasource.url=jdbc:mysql://localhost:3306/pdb_2026?useSSL=false
 workspace=C:/path/to/g2s/workdir/
 uploaddir=C:/path/to/g2s/tmp/upload
 
-blastp=C:/path/to/g2s/yichuan_scripts/blastp-docker.cmd
+blastp=C:/path/to/g2s/db-tools/blastp-docker.cmd
 ```
 
 Adjust the paths to match where you cloned the repo, and create the
@@ -127,21 +127,21 @@ reachable outside the machine.
 ```bash
 mvn clean package -DskipTests
 ```
-(On Windows, run `. .\yichuan_scripts\env.ps1` first to put JDK 8 and Maven on `PATH`.)
+(On Windows, run `. .\db-tools\env.ps1` first to put JDK 8 and Maven on `PATH`.)
 
 ### 8. Start the services
 
 Linux:
 ```bash
-./yichuan_scripts/start-services.sh
+./db-tools/start-services.sh
 ```
-Logs land in `g2s/logs/*.log`. Stop with `./yichuan_scripts/stop-services.sh`.
+Logs land in `g2s/logs/*.log`. Stop with `./db-tools/stop-services.sh`.
 
 Windows:
 ```powershell
-.\yichuan_scripts\start-services.ps1
+.\db-tools\start-services.ps1
 ```
-Opens three PowerShell windows, one per service. Stop with `.\yichuan_scripts\stop-services.ps1`.
+Opens three PowerShell windows, one per service. Stop with `.\db-tools\stop-services.ps1`.
 
 Quick check:
 ```

@@ -1,4 +1,4 @@
-# yichuan_scripts
+# db-tools
 
 Helper scripts for running G2S locally and on a deployed server.
 Daily usage: `../../START-SERVICES.md`. Deploying to a new machine: `../PRODUCTION-DEPLOY.md`.

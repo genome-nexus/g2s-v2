@@ -10,7 +10,7 @@
 #
 # Run once, as the user who should own the task (elevated PowerShell not
 # required for a per-user task):
-#   .\yichuan_scripts\pipeline-blast\register-weekly-update.ps1
+#   .\db-tools\pipeline-blast\register-weekly-update.ps1
 #
 # Remove later with:
 #   Unregister-ScheduledTask -TaskName "G2S-PipelineBlast-Update" -Confirm:$false

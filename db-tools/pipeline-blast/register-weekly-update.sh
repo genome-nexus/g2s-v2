@@ -11,7 +11,7 @@
 # below if your server is in a different timezone or you want more buffer.
 #
 # Run once (does NOT execute Update itself - only adds the crontab line):
-#   ./yichuan_scripts/pipeline-blast/register-weekly-update.sh
+#   ./db-tools/pipeline-blast/register-weekly-update.sh
 #
 # Remove later with: crontab -e   (delete the line tagged # g2s-pipeline-blast-update)
 set -euo pipefail

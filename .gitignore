@@ -76,7 +76,7 @@ tools/
 # --- Local config overrides (machine-specific paths; copy from *.example) ---
 **/application-local.properties
 docker-compose.override.yml
-yichuan_scripts/env.local.ps1
+db-tools/env.local.ps1
 
 # --- Path A docs are tracked; only personal notes here ---
 SETUP-PATH.local.md

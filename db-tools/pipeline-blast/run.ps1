@@ -29,8 +29,8 @@ param(
 $ErrorActionPreference = "Stop"
 $G2sRoot = Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path))
 Set-Location $G2sRoot
-. (Join-Path $G2sRoot "yichuan_scripts\env.ps1")
-. (Join-Path $G2sRoot "yichuan_scripts\pipeline-blast\config.ps1")
+. (Join-Path $G2sRoot "db-tools\env.ps1")
+. (Join-Path $G2sRoot "db-tools\pipeline-blast\config.ps1")
 
 function Assert-DockerMysql {
     $running = docker ps --filter "name=$PipelineDbContainer" --format "{{.Names}}" 2>$null

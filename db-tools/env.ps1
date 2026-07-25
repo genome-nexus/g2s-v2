@@ -1,4 +1,4 @@
-# Source before build/run: . .\yichuan_scripts\env.ps1
+# Source before build/run: . .\db-tools\env.ps1
 $Root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
 # Prefer Corretto 8, fallback to existing JDK 8
