@@ -149,17 +149,3 @@ http://<host>:8081/swagger-ui.html
 http://<host>:8082/swagger-ui.html
 https://<host>:5443/
 ```
-
-## Rebuilding the data images
-
-`yichuan0712/g2s-pdb2026-db` and `yichuan0712/g2s-blast-index` are built from
-the Dockerfiles in [`docker/`](docker/). To publish a new version after the
-underlying `pdb_2026.sql.gz` / `blast-index.tar.gz` changes, put the updated
-file next to the matching Dockerfile and:
-
-```bash
-docker build -t yichuan0712/g2s-pdb2026-db:latest -f docker/Dockerfile.pdb2026-db .
-docker build -t yichuan0712/g2s-blast-index:latest -f docker/Dockerfile.blast-index .
-docker push yichuan0712/g2s-pdb2026-db:latest
-docker push yichuan0712/g2s-blast-index:latest
-```
