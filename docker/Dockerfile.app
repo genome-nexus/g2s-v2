@@ -21,6 +21,13 @@ RUN keytool -genkeypair -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 204
 
 RUN mvn -B clean package -DskipTests -pl pdb,pdb-alignment-api,pdb-alignment-web -am
 
+# Rename to fixed names so the runtime stage doesn't hardcode each module's
+# <version>, which would otherwise silently need updating here on every bump.
+RUN mkdir -p /out \
+    && cp pdb-alignment-api/target/pdb-alignment-api-*.jar /out/pdb-alignment-api.jar \
+    && cp pdb/target/pdb-*.war /out/pdb.war \
+    && cp pdb-alignment-web/target/pdb-alignment-web-*.jar /out/pdb-alignment-web.jar
+
 FROM eclipse-temurin:8-jre-jammy AS runtime
 WORKDIR /app
 
@@ -39,9 +46,9 @@ RUN apt-get update \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=build /build/pdb-alignment-api/target/pdb-alignment-api-0.1.0.jar /app/pdb-alignment-api.jar
-COPY --from=build /build/pdb/target/pdb-0.1.0.war /app/pdb.war
-COPY --from=build /build/pdb-alignment-web/target/pdb-alignment-web-0.1.0.jar /app/pdb-alignment-web.jar
+COPY --from=build /out/pdb-alignment-api.jar /app/pdb-alignment-api.jar
+COPY --from=build /out/pdb.war /app/pdb.war
+COPY --from=build /out/pdb-alignment-web.jar /app/pdb-alignment-web.jar
 
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
