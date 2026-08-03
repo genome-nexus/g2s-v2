@@ -1,7 +1,6 @@
 **/target/
 **/keystore.p12
 mysql_data/
-mysql_data_old/
 mongo_data/
 workdir/
 tmp/

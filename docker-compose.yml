@@ -27,22 +27,6 @@ services:
       # disk) reports healthy within seconds, well inside this window.
       start_period: 60m
 
-  # Legacy 2025 archive DB - nothing in the app connects to it.
-  # `docker compose --profile legacy up -d` to start it.
-  mysql-old:
-    image: mariadb:10.0
-    container_name: pdb-mariadb-old
-    profiles: ["legacy"]
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: pdb
-      MYSQL_USER: cbio
-      MYSQL_PASSWORD: cbio
-    ports:
-      - "3307:3306"
-    volumes:
-      - ./mysql_data_old:/var/lib/mysql
-
   mongo:
     image: mongo:4.4
     container_name: pdb-mongo

@@ -40,13 +40,11 @@ This brings up, in order:
   used by cbioportal-frontend/Genome Nexus today.
 
 Not started by default:
-- `mysql-old` — legacy archive DB, nothing in the app connects to it.
 - `pdb-alignment-api` (:8081) and `pdb` (:8082) — not currently used by
   anything; kept running-capable rather than deleted in case something still
   needs their raw APIs directly.
 
-Start either with `docker compose --profile legacy up -d` (`mysql-old`) or
-`docker compose --profile unused-apis up -d` (`pdb-alignment-api` + `pdb`).
+Start them with `docker compose --profile unused-apis up -d`.
 
 First start only - MySQL is importing ~29M rows and can take **well over the
 "a few minutes" you'd guess** (30+ minutes is normal on Docker

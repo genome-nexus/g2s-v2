@@ -44,7 +44,6 @@ __pycache__/
 
 # --- Docker / local databases (large, machine-specific) ---
 mysql_data/
-mysql_data_old/
 mongo_data/
 data/
 
@@ -55,11 +54,6 @@ g2s_pdb/
 pdbRepo/
 latest-alignment-inputs/
 diamond-inputs/
-
-# --- Database dumps & imports ---
-mysqldump_*.sql
-mysqldump_*.sql.gz
-import-db.log
 
 # --- Deployment transfer package (large, machine-specific, never commit) ---
 deploy-package/

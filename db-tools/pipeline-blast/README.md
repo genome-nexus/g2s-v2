@@ -2,7 +2,7 @@
 
 Self-contained rebuild path under `db-tools/pipeline-blast/` (target DB: **`pdb_2026`** on **`pdb-mariadb`** :3306).
 
-Does **not** modify `pdb-alignment-pipeline` (legacy dump path unchanged on **`pdb-mariadb-old`**).
+Does **not** modify `pdb-alignment-pipeline`.
 
 - **pdb-prepare** (Java fork) → **prepare_inputs.py** → **makeblastdb** → **blastp** → **SQL** → **pdb_2026**
 
@@ -91,4 +91,3 @@ script, or `PRODUCTION-DEPLOY.md`.
 
 - `seq_entry.SEQUENCE` (TEXT NOT NULL)
 - Wider UniProt/Ensembl VARCHAR
-- Legacy `pdb` dump schema unchanged on **`pdb-mariadb-old`**
