@@ -11,10 +11,28 @@ services:
       - "3306:3306"
     volumes:
       - ./mysql_data:/var/lib/mysql
+    healthcheck:
+      # -h 127.0.0.1 (not "localhost") to force the TCP listener specifically -
+      # "localhost" resolves to the Unix socket, which is already alive during
+      # MariaDB's internal --skip-networking init/import phase and would
+      # report healthy long before the real port is actually up.
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      # First-ever start has to import ~29M rows before the real (networked)
+      # mysqld comes up - measured ~31 minutes on Docker Desktop/WSL2. Failures
+      # during start_period don't count against `retries`, so this only adds
+      # delay to that one-time cold start; a warm restart (data already on
+      # disk) reports healthy within seconds, well inside this window.
+      start_period: 60m
 
+  # Legacy 2025 archive DB - nothing in the app connects to it.
+  # `docker compose --profile legacy up -d` to start it.
   mysql-old:
     image: mariadb:10.0
     container_name: pdb-mariadb-old
+    profiles: ["legacy"]
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: pdb
@@ -32,3 +50,71 @@ services:
       - "27017:27017"
     volumes:
       - ./mongo_data:/data/db
+
+  # One-shot: extracts the pre-built BLAST index (pdb_seqres.db.* + .fasta)
+  # into ./workdir, which pdb-alignment-web mounts below. No-ops on reruns.
+  blast-index-init:
+    image: yichuan0712/g2s-blast-index:latest
+    container_name: g2s-blast-index-init
+    volumes:
+      - ./workdir:/out
+    command: ["sh", "-c", "test -f /out/pdb_seqres.fasta || tar -xzf /blast-index.tar.gz -C /out"]
+
+  pdb-alignment-api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    image: g2s-app:local
+    container_name: g2s-alignment-api
+    command: ["java", "-Xmx4096m", "-jar", "/app/pdb-alignment-api.jar"]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/pdb_2026?useSSL=false
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+
+  pdb:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    image: g2s-app:local
+    container_name: g2s-pdb-api
+    # -Djava.security.egd: `pdb` is the only module pulling in
+    # spring-boot-starter-security, whose SecureRandom-backed session/CSRF
+    # setup blocks on /dev/random inside containers - without this it hangs
+    # indefinitely right after "Initializing Spring embedded
+    # WebApplicationContext" with 0% CPU. Points the JVM at /dev/urandom
+    # instead (fine for this internal, dev-facing tool).
+    command: ["java", "-Xmx2048m", "-Djava.security.egd=file:/dev/./urandom", "-Dorg.springframework.boot.logging.LoggingSystem=org.springframework.boot.logging.java.JavaLoggingSystem", "-jar", "/app/pdb.war"]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/pdb_2026
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/pdb_annotation
+      SERVER_PORT: 8082
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+    ports:
+      - "8082:8082"
+
+  pdb-alignment-web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    image: g2s-app:local
+    container_name: g2s-alignment-web
+    command: ["java", "-Xmx4096m", "-jar", "/app/pdb-alignment-web.jar"]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/pdb_2026?useSSL=false
+    depends_on:
+      mysql:
+        condition: service_healthy
+      blast-index-init:
+        condition: service_completed_successfully
+    volumes:
+      - ./workdir:/app/workdir
+    ports:
+      - "5443:5443"

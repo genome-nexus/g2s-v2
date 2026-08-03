@@ -1,28 +1,9 @@
 # db-tools
 
-Helper scripts for running G2S locally and on a deployed server.
-Daily usage: `../../START-SERVICES.md`. Deploying to a new machine: `../PRODUCTION-DEPLOY.md`.
-
-## Daily use
-
-| File | What it does |
-|------|---------------|
-| `env.ps1` | Windows only. Dot-sourced by the scripts below before building/running: detects JDK 8 (Corretto or a system install), Maven (repo-local `tools/` or system), and Docker Desktop, then puts them on `PATH`/`JAVA_HOME`/`MAVEN_HOME`. |
-| `start-services.ps1` | Windows daily entry point. Sources `env.ps1`, then opens three separate PowerShell windows running the G2S API (8081), PDB API (8082), and Web UI (5443) against `pdb_2026` with the `local` Spring profile. |
-| `stop-services.ps1` | Windows counterpart to `start-services.ps1` — finds and kills the three java processes by matching their command line, so you don't have to close each window by hand. |
-| `start-services.sh` | Linux equivalent of `start-services.ps1`. Runs the same three services as background `java` processes, logging to `g2s/logs/*.log`. Used by `PRODUCTION-DEPLOY.md`. |
-| `stop-services.sh` | Linux equivalent of `stop-services.ps1` — kills the three java processes started by `start-services.sh`. |
-
-## blastp via Docker
-
-No native BLAST+ install needed. `application-local.properties`'s `blastp=`
-points at these shims, so the "search by protein sequence" feature runs
-`blastp` inside a Docker container (`ncbi/blast` image) instead.
-
-| File | What it does |
-|------|---------------|
-| `blastp-docker.cmd` | Windows shim actually in use. Rewrites the paths Java passes in and runs `blastp` inside the `ncbi/blast` Docker image. |
-| `blastp-docker.sh` | Linux equivalent, used the same way via `application-local.properties`'s `blastp=` on a deployed server — see `../PRODUCTION-DEPLOY.md`. |
+Helper scripts for G2S. Daily usage (starting/stopping the app) is now all
+Docker Compose — see `../README.md` at the repo root. The three Java
+services and `blastp` no longer run natively, so there are no
+start/stop/env scripts here anymore.
 
 ## One-time / historical DB setup
 
