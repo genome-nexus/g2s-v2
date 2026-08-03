@@ -1,12 +1,7 @@
 # Deploying G2S
 
-Everything runs in Docker — the databases (MySQL, MongoDB) and the three
-Java services alike. No native JDK/Maven install, no manual keystore
-generation, no BLAST sidecar shims. Works the same way on Linux or Windows.
-
-## Prerequisites
-
-- Docker + Docker Compose (Docker Desktop on Windows)
+Runs entirely via Docker Compose, the same way on Linux or Windows. Only
+prerequisite: Docker + Docker Compose (Docker Desktop on Windows).
 
 ## Steps
 
