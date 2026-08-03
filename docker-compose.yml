@@ -60,12 +60,17 @@ services:
       - ./workdir:/out
     command: ["sh", "-c", "test -f /out/pdb_seqres.fasta || tar -xzf /blast-index.tar.gz -C /out"]
 
+  # Not currently used by cbioportal-frontend/Genome Nexus - pdb-alignment-web
+  # (below) is the only one actually wired up. Kept running, not deleted, in
+  # case something still needs the raw byPdb/byUniprot API directly.
+  # `docker compose --profile unused-apis up -d` to start it.
   pdb-alignment-api:
     build:
       context: .
       dockerfile: docker/Dockerfile.app
     image: g2s-app:local
     container_name: g2s-alignment-api
+    profiles: ["unused-apis"]
     command: ["java", "-Xmx4096m", "-jar", "/app/pdb-alignment-api.jar"]
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/pdb_2026?useSSL=false
@@ -75,12 +80,15 @@ services:
     ports:
       - "8081:8081"
 
+  # Same as pdb-alignment-api above - not currently used, kept but not
+  # started by default. `docker compose --profile unused-apis up -d`.
   pdb:
     build:
       context: .
       dockerfile: docker/Dockerfile.app
     image: g2s-app:local
     container_name: g2s-pdb-api
+    profiles: ["unused-apis"]
     # -Djava.security.egd: `pdb` is the only module pulling in
     # spring-boot-starter-security, whose SecureRandom-backed session/CSRF
     # setup blocks on /dev/random inside containers - without this it hangs
