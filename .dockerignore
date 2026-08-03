@@ -1,0 +1,11 @@
+**/target/
+**/keystore.p12
+mysql_data/
+mysql_data_old/
+mongo_data/
+workdir/
+tmp/
+logs/
+tools/
+.git/
+db-tools/pipeline-blast/
